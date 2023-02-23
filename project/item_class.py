@@ -175,7 +175,7 @@ class Item:
         conn.close()
 
 
-a = Item()
+# a = Item()
 # a.insert_item()
 # a.update_item()
 # a.delete_item()

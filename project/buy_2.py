@@ -1,7 +1,6 @@
 import sqlite3,os
 path = os.path.dirname(__file__)
 
-# 23_02_22_v01 수정본
 class f:  # 사용자 물건 구매 클래스
     def __init__(self):  # 초기값 DB정보
         self.con = sqlite3.connect(path+"/mart.db")
@@ -10,13 +9,13 @@ class f:  # 사용자 물건 구매 클래스
 
     def log(self):  # 로그인 과정
         self.cur.execute(
-            "select cus_id,cus_pw from customer")  # 사용자 id,pw 정보 가져옴
+            "select cus_id,cus_pw from customer")       # 사용자 id,pw 정보 가져옴
         d = self.cur.fetchall()
 
-        self.cus_id = input("아이디 입력 : ")  # id입력
-        self.cus_pw = input("패스워드 입력 : ")  # pw입력
+        self.cus_id = input("아이디 입력 : ")           # id입력
+        self.cus_pw = input("패스워드 입력 : ")         # pw입력
 
-        if (self.cus_id, self.cus_pw) in d:  # 가져온 사용자 정보와 입력값이 일치하는지 비교
+        if (self.cus_id, self.cus_pw) in d:             # 가져온 사용자 정보와 입력값이 일치하는지 비교
             print("로그인 성공")
             self.login_value = True
             self.user_date = self.cur.execute(
@@ -24,10 +23,10 @@ class f:  # 사용자 물건 구매 클래스
                                             from customer
                                             where cus_id='{self.cus_id}'
                                             and cus_pw='{self.cus_pw}'"""
-            ).fetchone()  # 로그인동시에 유저 데이터 가져옴
+            ).fetchone()                                # 로그인동시에 유저 데이터 가져옴
 
         else:
-            print("사용자 정보가 없습니다.")  # 정보가 없으면 출력
+            print("사용자 정보가 없습니다.")              # 정보가 없으면 출력
 
     # 출력할때 문자열 길이 맞춰주는 ㅎㅁ수
     def ward_len(self, x):
@@ -76,13 +75,13 @@ class f:  # 사용자 물건 구매 클래스
                                 from materiel_management
                                  where mat_category = '{ca}'"""
             )  # 선택한 카테고리에 해당하는 품목 가져오기
-            print(f'{"품목명":<30}|  {"할인율":<5}|   {"가격":<7}|  {"수량":<4}')
+            print(f'{"품목명":<30}|  {"할인율":<5}|   {"가격":<7} | {"수량":<4}')
 
             for i in self.cur.fetchall():  # 선택한 카테고리에 해당하는 품목 출력
                 aa = 32 - self.ward_len(i[0])  # 프린트 할때 길이 맞춰주는 함수
 
                 print(
-                    f'{i[0]:<{aa}}  {str(i[1])+"%":<7}  {(i[2]-(i[2]*(i[1]/100)) if i[3] else i[2]):<9}   {i[4]:<4}'
+                    f'{i[0]:<{aa}}  {str(i[1])+"%":<7}  {(i[2]-(i[2]*(i[1]/100)) if i[3] else i[2]):<7}       {i[4]:<4}'
                 )
 
         # 할인하는 품목 가져오기
@@ -91,11 +90,11 @@ class f:  # 사용자 물건 구매 클래스
                 """select mat_name ,mat_discount,mat_price ,mat_num
                                 from materiel_management
                                  where mat_dis = '1'""")  # 할인품목 가져오기
-            print(f'{"품목명":<40} | {"할인율":<5} | {"가격":<7} | {"수량":<4}')
+            print(f'{"품목명":<40} | {"할인율":<5}| {"가격":<7} | {"수량":<4}')
             for i in self.cur.fetchall():
                 aa = 42 - self.ward_len(i[0])  # 프린트 할때 길이 맞춰주는 함수#할인품목 출력
                 print(
-                    f'{i[0]:<{aa}}  {str(i[1])+"%":<7}  {i[2]-(i[2]*i[1]/100):<9}  {i[3]:<4}'
+                    f'{i[0]:<{aa}}  {str(i[1])+"%":<7}  {i[2]-(i[2]*i[1]/100):<9}   {i[3]:<4}'
                 )
 
         elif a == "3":  # 종료
@@ -117,6 +116,34 @@ class f:  # 사용자 물건 구매 클래스
             name = input("구매할 물품명 입력 종료(q): ")  # 구매할 물품 선택
             if name == "q":  # 종료 q
                 break
+            
+            # 특정이름 들어간 상품이 여러개일때 데이터 
+            name_list=self.cur.execute(
+            f"""select mat_name ,mat_discount,mat_price,mat_dis,mat_num ,mat_index
+                            from materiel_management
+                            where mat_name like '%{name}%' 
+                             """).fetchall()       # 물품 정보 가져오기
+            
+            # 특정이름 들어간 상품이 여러개일때 실행 
+            if len(name_list)>1:
+                print( )
+                for it_n,item_n in enumerate(name_list):   # 상품리스트 출력 
+                    print( f"{it_n}. {item_n[0]}")
+                print( )
+                u_name=input("상품의 번호 또는 상품명을 입력하세요.  종료(q): ")  # 번호또는 이름입력 
+                if name == "q":  # 종료 q
+                    break
+                
+                #숫자일때 인덱스로 이름 찾음 
+                if u_name.isdecimal():                  
+                    if 0<=int(u_name)<len(name_list):
+                        name=name_list[int(u_name)][0]
+                    else:
+                        print("없는 숫자 입니다")
+                else:
+                    name=u_name #이름은 그냥이름 
+
+            
             if name in d_name:  # 입력한 품목이 db에 있으면 개수 입력으로 넘어감
                 while True:
                     count = input("구매개수 입력 종료(q) : ")
@@ -129,7 +156,7 @@ class f:  # 사용자 물건 구매 클래스
                         
                     #  입력된 제품의 정보를 db에서 가져옴
                         d_discount, d_price, d_dis, d_num, d_index = self.cur.execute(
-                            f"""select mat_discount,
+                                                                    f"""select mat_discount,
                                                                                 mat_price,
                                                                                 mat_dis,
                                                                                 mat_num ,
@@ -156,6 +183,7 @@ class f:  # 사용자 물건 구매 클래스
                                         if tt1.isdecimal():
                                             tt1=int(tt1)
                                             break
+                                        
                                         else:
                                             print("숫자를 입력하세요")
                                             continue
@@ -648,5 +676,7 @@ class branch:
         else:
             # 최고 관리자가 아니면 접근 불가
             print("권한이 없다.")
-#end
+            
+#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end#end
+            
             
