@@ -1,0 +1,6 @@
+create table item_log (
+mat_index num,
+mat_name text,
+in_out text,
+mat_num num,
+input_date date)

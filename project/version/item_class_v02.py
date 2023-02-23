@@ -77,11 +77,7 @@ class Item:
         cur = conn.cursor()
         #수정할 물품번호가 일치하지 않으면 맞을 때까지 물품번호 다시 입력해야함 
         while True:
-            mat_index = input('수정할 물품번호 >>> ')
-            if not mat_index.isdigit():
-                continue
-            else:
-                mat_index=int(mat_index)
+            mat_index = int(input('수정할 물품번호 >>> '))
             for item in cur.execute('select * from materiel_management'): #materiel_management로 부터 모든 데이터 가져오고 sql 명령 실행
                 check = 0
                 if item[0] == mat_index:
@@ -155,13 +151,10 @@ class Item:
         cur = conn.cursor()
         mat_index = int(input('입고할 물품번호 >>> '))
         mat_num = int(input('입고할 물품 수량 >>> '))
-        
         for item in cur.execute('select * from materiel_management'): 
             if item[0] == mat_index: 
                 sum = mat_num + item[3] #sum은 기존 수량에 입고할 물품을 더 하는 변수
-                cur.execute(f"insert into item_log values('{item[0]}','{item[2]}','입고','{mat_num}',datetime('now','+9 hours'))")
                 cur.execute(f'update materiel_management set mat_num = {sum} where mat_index={mat_index}')
-            
                 break #물품번호가 일치하면 중지
         conn.commit()
         conn.close()
@@ -173,33 +166,14 @@ class Item:
         cur = conn.cursor()
         mat_index = int(input('출고할 물품번호 >>> '))
         mat_num = int(input('출고할 물품 수량 >>> '))
-
         for item in cur.execute('select * from materiel_management'):
             if item[0] == mat_index:
                 sum =  item[3] - mat_num #sum은 기존 수량에 출고할 물품을 빼는 함수
-                cur.execute(f"insert into item_log values('{item[0]}','{item[2]}','출고','{mat_num}',datetime('now','+9 hours'))")
                 cur.execute(f'update materiel_management set mat_num = {sum} where mat_index={mat_index}')
                 break #물품번호가 일치하면 중지
         conn.commit()
         conn.close()
 
-    def itemlog(self):
-        conn = sqlite3.connect(path + '/mart.db')
-        cur = conn.cursor()
-        sql = 'select * from item_log'
-        cur.execute(sql) 
-        
-        for item in cur.fetchall(): 
-            print(f'''
-물품 번호    : {item[0]}
-물 품 명     : {item[1]}
-입출고 여부  : {item[2]}
-입출고 수량  : {item[3]}
-입출고 시간  : {item[4]}           
-            ''')
-                
-
-        conn.close()
 
 # a = Item()
 # a.insert_item()
@@ -207,4 +181,3 @@ class Item:
 # a.delete_item()
 # a.output_item()
 # a.search_item()
-

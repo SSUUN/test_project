@@ -133,6 +133,7 @@ class Customer:
         conn.close()
 
 
+
     # 회원 정보 수정 함수
     # 입력값 : 수정할 column
     # 해당 아이디 회원정보 열을 입력받아서 값을 업데이트
@@ -235,6 +236,24 @@ class Customer:
                     
         conn.close()
 
+
+    # 사용자의 영수증 기록 다 출력 
+    def buy_log_print(self):
+        conn1 = sqlite3.connect(path+'/mart.db')
+        cur1 = conn1.cursor()
+        for i in cur1.execute(f"""select * from buy
+                                        where cus_num=(select cus_num
+                                                            from customer
+                                                            where cus_id='{self.id}')""").fetchall():
+            #i=self.cur.execute("select * from buy order by buy_date").fetchall()[-1]
+            ww=cur1.execute(f"select mat_name from materiel_management where mat_index={i[1]} ").fetchone()[0]
+            print(f"영수증 번호 : {i[0]} ")
+            print(f"사용자 번호 : {i[2]} ")
+            print(f"사용자 등급 : {i[3]} ")
+            print(f"물품 명     : {ww} ")
+            print(f"구매 지점   : {i[4]} ")
+            print(f"구매 총액   : {i[6]} ")
+            print(f"구매 시간   : {i[-1]} \n")
 
 
 # a = Customer()

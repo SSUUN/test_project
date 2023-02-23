@@ -28,9 +28,9 @@ class f:  # 사용자 물건 구매 클래스
         else:
             print("사용자 정보가 없습니다.")              # 정보가 없으면 출력
 
-    # 출력할때 문자열 길이 맞춰주는 ㅎㅁ수
+    # 출력할때 문자열 길이 맞춰주는 함수
+    #
     def ward_len(self, x):
-        d={3:4,2:2,1:0}
         s = 0
         for i in x:
             if ord(i) > 123:
@@ -51,9 +51,11 @@ class f:  # 사용자 물건 구매 클래스
             return int(s / 2.2)
         elif s == 1:
             return int(s /3)
-        
         else:
             return 0
+
+
+        
 
     def serch(self):  # 특정 조건에 해당하는 품목들 출력하는 함수 (ex 할인품목
         a = input("""
@@ -198,13 +200,26 @@ class f:  # 사용자 물건 구매 클래스
                                 # 구매 하면 물품 개수 차감,적립금 사용자 전체사용금액, 영수증? 테이블 업데이트
                             self.buy_update(name, d_num, d_price, tt1, d_dis,
                                                 d_discount, d_index, count)
+                            self.buy_log_last()
                                 # print("구매 완료")# 구매성공
                             break
                     else:
                         print("숫자를 입력하세요")
             else:
                 print("없는 상품 입니다.")  # 없는 물품 입력시 없다고 한다
-
+                
+    def buy_log_last(self):
+            i=self.cur.execute("select * from buy order by buy_date").fetchall()[-1]
+            ww=self.cur.execute(f"select mat_name from materiel_management where mat_index={i[1]} ").fetchone()[0]
+            print(f"영수증 번호 : {i[0]} ")
+            print(f"사용자 번호 : {i[2]} ")
+            print(f"사용자 등급 : {i[3]} ")
+            print(f"물품 명     : {ww} ")
+            
+            print(f"구매 지점   : {i[4]} ")
+            print(f"구매 총액   : {i[6]} ")
+            print(f"구매 시간   : {i[-1]} ")
+                
     # 구매하면 DB데이블 업데이트 해주는 함수
     def buy_update(self, item_name, item_num, item_price, user_save, dis,
                    discount, index, count):  # 상품 구매시 데이터 베이스 업데이트
@@ -268,7 +283,7 @@ class f:  # 사용자 물건 구매 클래스
                             {1 if dis else 0 },
                             {discount*dis},
                             {1 if user_save else 0},
-                            datetime('now'))""")
+                            datetime('now','+9 hours'))""")
         # 구매완료 결제정보 출력
         print(f"{item_name} {count}개 {price1}원 결제완료({int(price1*0.01)}원 적립)\n")
         self.con.commit()
