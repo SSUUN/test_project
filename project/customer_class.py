@@ -91,14 +91,20 @@ class Customer:
                         break
                     print('비밀번호가 일치하지 않습니다.')
             if cus_id in ('Q','q'):                     # 'Q','q'로 아이디 입력을 벗어남
+                login_check = False
                 break
             elif check == 1:                             # 제대로된 아이디/비밀번호 값을 받으면 반복을 벗어남
                 break
             elif check == 0:                            # 아이디가 없을 경우 출력되고 아이디 입력으로 돌아간다
                 print('존재하지 않는 아이디 입니다.')
-
+        
         conn.close()
+        return login_check
 
+    def log_out(self):
+        login_check = False
+        self.id = ''
+        return login_check
 
     
     # 회원 정보 조회 함수

@@ -56,7 +56,9 @@ while True:
 
             # 로그인 및 회원메뉴
             elif cos_memu == '2':
-                customer.login_customer()
+                cos = bool(customer.login_customer())
+                if (cos == False):
+                    continue
                 
                 # 로그인 해야지만 가능 로그인 후 하위 메뉴 활성화
                 while True:
@@ -67,7 +69,7 @@ while True:
     │ 1. 조회                         │
     │ 2. 회원정보 수정                │
     │ 3. 회원정보 탈퇴 및 삭제        │
-    │ 4. 상위 메뉴 돌아가기           │
+    │ 4. 상위 메뉴 돌아가기(로그아웃) │
     └─────────────────────────────────┘
                     '''
                     customer_menu = input(customer_display)
@@ -84,8 +86,11 @@ while True:
                     elif customer_menu == '3':
                         customer.withdraw_customer()
                     
-                    # 상위 메뉴로 돌아가기
+                    # 로그아웃 및 상위 메뉴로 돌아가기
                     elif customer_menu == '4':
+                        log_out = customer.log_out()
+                        if (log_out == False):
+                            print('로그아웃 성공')
                         print('상위 메뉴로 돌아갑니다!!')
                         break
                     else:
