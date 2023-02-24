@@ -88,6 +88,7 @@ class Customer:
                         global login_check             
                         login_check = True              # 아이디/비밀번호가 DB값과 일치하면 전역변수 login_check를 True로 바꾼다
                         self.id = i[1]                  # self.id 인스턴스 변수를 입력한 아이디값으로 저장
+                        print("로그인 성공!")
                         break
                     print('비밀번호가 일치하지 않습니다.')
             if cus_id in ('Q','q'):                     # 'Q','q'로 아이디 입력을 벗어남
