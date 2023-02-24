@@ -240,8 +240,11 @@ class Customer(f):
             print(f"구매 지점   : {i[4]} ")
             print(f"구매 총액   : {i[6]} ")
             print(f"구매 시간   : {i[-1]} \n")
-            
+
         self.back_buy(u)
+        save_money = cur.execute(f"select cus_save from customer where cus_id='{self.id}'").fetchone()[0]
+        if save_money < 0:
+            cur.execute(f"update customer set cus_save = 0 where cus_id = '{self.id}'" )
     # 환불하는함수 
     def back_buy(self,u):
         #선택
@@ -251,7 +254,7 @@ class Customer(f):
             return
         a=int(a)
 
-        # 내역에 있는값잉ㄴ지 확인 
+        # 내역에 있는값인지 확인 
         ck=1
         for i in u:
             if i[0] == a:
@@ -264,7 +267,7 @@ class Customer(f):
                 ck=0
                 break
             
-        # 없거나 이미 화불한내역 
+        # 없거나 이미 환불한내역 
         if ck==1:
             print("없는번호")
         elif price1<0:
@@ -281,6 +284,7 @@ class Customer(f):
                                         where mat_index='{index}'""").fetchone()
 
             user_save=-((item_price * count - item_price * count * discount / 100) if dis  else item_price * count)-price1
+
             count=-i[5]
             price1=-i[6]
             self.buy_update(item_name,item_price,user_save, dis,
