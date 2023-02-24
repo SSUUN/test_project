@@ -8,7 +8,7 @@ class Item:
 
     def __init__(self):
         conn = sqlite3.connect(path + '/mart.db') 
-        cur = conn.cursor()
+        # cur = conn.cursor()
         # cur.execute('''
         # create table if not exists materiel_management(
         # mat_index INTEGER PRIMARY KEY AUTOINCREMENT,

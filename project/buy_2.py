@@ -31,7 +31,7 @@ class f:  # 사용자 물건 구매 클래스
 
     # 출력할때 문자열 길이 맞춰주는 함수
     #
-    def ward_len(self, x):
+    def word_len(self, x):
         s = 0
         for i in x:
             if ord(i) > 123:
@@ -81,7 +81,7 @@ class f:  # 사용자 물건 구매 클래스
             print(f'{"품목명":<30}|  {"할인율":<5}|   {"가격":<7} | {"수량":<4}')
 
             for i in self.cur.fetchall():  # 선택한 카테고리에 해당하는 품목 출력
-                aa = 32 - self.ward_len(i[0])  # 프린트 할때 길이 맞춰주는 함수
+                aa = 32 - self.word_len(i[0])  # 프린트 할때 길이 맞춰주는 함수
 
                 print(
                     f'{i[0]:<{aa}}  {str(i[1])+"%":<7}  {(i[2]-(i[2]*(i[1]/100)) if i[3] else i[2]):<7}       {i[4]:<4}'
@@ -95,7 +95,7 @@ class f:  # 사용자 물건 구매 클래스
                                  where mat_dis = '1'""")  # 할인품목 가져오기
             print(f'{"품목명":<40} | {"할인율":<5}| {"가격":<7} | {"수량":<4}')
             for i in self.cur.fetchall():
-                aa = 42 - self.ward_len(i[0])  # 프린트 할때 길이 맞춰주는 함수#할인품목 출력
+                aa = 42 - self.word_len(i[0])  # 프린트 할때 길이 맞춰주는 함수#할인품목 출력
                 print(
                     f'{i[0]:<{aa}}  {str(i[1])+"%":<7}  {i[2]-(i[2]*i[1]/100):<9}   {i[3]:<4}'
                 )
