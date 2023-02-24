@@ -245,12 +245,12 @@ class Customer:
                 cur.execute(f"select * from customer where cus_id ='{cus_id}'") # customer테이블에서 cus_id와 일치하는 행을 가져옴
                 item = cur.fetchone()
                 print(f'''
-회원 번호 : {item[0]}
+회원 번호   : {item[0]}
 회원 아이디 : {item[1]}
-회원 이름 : {item[3]}
+회원 이름   : {item[3]}
 회원 적립금 : {item[6]}
 총 구매금액 : {item[7]}
-회원 등급 : {item[8]}''')
+회원 등급   : {item[8]}''')
                 check = 1
                 break
         if check == 0:
