@@ -516,7 +516,7 @@ class branch:
                                 # 있으면 근무지 수정
                                 else:
                                     self.cur.execute(
-                                        f"""update Manager set market_id='{m_pl}' where manager_id='{ma_id}'"""# cus_id는 로그인함수에서 저장한 self.id를 가져옴
+                                        f"""update Manager set market_id='{m_pl}' where manager_id='{ma_id}'"""
                                     )
                                     self.con.commit()
                                     print("수정완료")
