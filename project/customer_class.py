@@ -110,7 +110,7 @@ class Customer:
     # 회원 정보 조회 함수
     # 입력값 : x
     # 해당 아이디 회원정보를 출력
-    # 로그인함수에서 입력받은 self.id(회원아이디)를 가져다쓴다
+    # 로그인함수에서 입력받은 self.id(회원아이디)를 가져다 쓴다
     def view_customer(self):
         cus_id = self.id                                                # cus_id는 로그인함수에서 저장한 self.id를 가져옴
 
@@ -137,7 +137,7 @@ class Customer:
     # 회원 정보 수정 함수
     # 입력값 : 수정할 column
     # 해당 아이디 회원정보 열을 입력받아서 값을 업데이트
-    # 로그인함수에서 입력받은 self.id(회원아이디)를 가져다쓴다
+    # 로그인함수에서 입력받은 self.id(회원아이디)를 가져다 쓴다
     def update_customer(self):
         cus_id = self.id                                                # cus_id는 로그인함수에서 저장한 self.id를 가져옴
 
@@ -196,7 +196,7 @@ class Customer:
     # 회원탈퇴 함수
     # 입력값 : x
     # 해당 아이디 회원정보를 삭제
-    # 로그인함수에서 입력받은 self.id(회원아이디)를 가져다쓴다
+    # 로그인함수에서 입력받은 self.id(회원아이디)를 가져다 쓴다
     def withdraw_customer(self):
         cus_id = self.id                                             # cus_id는 로그인함수에서 저장한 self.id를 가져옴
 
@@ -207,6 +207,28 @@ class Customer:
 
         conn.commit()
         conn.close()
+
+
+    # 사용자의 영수증 기록 다 출력 
+    # 입력값 : X
+    # 로그인함수에서 입력받은 self.id(회원아이디)를 가져다 쓴다
+    # 회원아이디로 회원번호를 찾고 buy테이블에서 해당 회원의 데이터를 가져다 쓴다
+    def buy_log_print(self):
+        conn = sqlite3.connect(path+'/mart.db')
+        cur = conn.cursor()
+
+        for i in cur.execute(f"""select * from buy 
+                                    where cus_num=(select cus_num from customer
+                                                        where cus_id='{self.id}')""").fetchall():   # cus_id는 로그인함수에서 저장한 self.id를 가져옴
+            #i=self.cur.execute("select * from buy order by buy_date").fetchall()[-1]
+            ww=cur.execute(f"select mat_name from materiel_management where mat_index={i[1]} ").fetchone()[0]   #물품명은 buy테이블에 없어서 m-m테이블에서 가져옴
+            print(f"영수증 번호 : {i[0]} ")
+            print(f"사용자 번호 : {i[2]} ")
+            print(f"사용자 등급 : {i[3]} ")
+            print(f"물품 명     : {ww} ")
+            print(f"구매 지점   : {i[4]} ")
+            print(f"구매 총액   : {i[6]} ")
+            print(f"구매 시간   : {i[-1]} \n")
 
 
     # 로그인 하지 않고 회원 정보 조회하는 함수
@@ -237,34 +259,14 @@ class Customer:
         conn.close()
 
 
-    # 사용자의 영수증 기록 다 출력 
-    def buy_log_print(self):
-        conn1 = sqlite3.connect(path+'/mart.db')
-        cur1 = conn1.cursor()
-        for i in cur1.execute(f"""select * from buy
-                                        where cus_num=(select cus_num
-                                                            from customer
-                                                            where cus_id='{self.id}')""").fetchall():
-            #i=self.cur.execute("select * from buy order by buy_date").fetchall()[-1]
-            ww=cur1.execute(f"select mat_name from materiel_management where mat_index={i[1]} ").fetchone()[0]
-            print(f"영수증 번호 : {i[0]} ")
-            print(f"사용자 번호 : {i[2]} ")
-            print(f"사용자 등급 : {i[3]} ")
-            print(f"물품 명     : {ww} ")
-            print(f"구매 지점   : {i[4]} ")
-            print(f"구매 총액   : {i[6]} ")
-            print(f"구매 시간   : {i[-1]} \n")
-
-
 # a = Customer()
 # # a.signup_customer()
 # a.login_customer()
-# print(login_check)
-# a.view_customer()
-# a.update_customer()
-# a.withdraw_customer()
-# a.info_customer()
-
+# # a.view_customer()
+# # a.update_customer()
+# # a.withdraw_customer()
+# # a.info_customer()
+# a.buy_log_print()
 
 
  
