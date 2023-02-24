@@ -183,6 +183,7 @@ class Item:
         conn.commit()
         conn.close()
 
+    # 입출고 로그 출력 함수
     def itemlog(self):
         conn = sqlite3.connect(path + '/mart.db')
         cur = conn.cursor()

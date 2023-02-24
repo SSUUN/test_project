@@ -208,7 +208,8 @@ class f:  # 사용자 물건 구매 클래스
                         print("숫자를 입력하세요")
             else:
                 print("없는 상품 입니다.")  # 없는 물품 입력시 없다고 한다
-                
+           
+    # 마지막 구매내역 영수증 출력 함수     
     def buy_log_last(self):
             i=self.cur.execute("select * from buy order by buy_date").fetchall()[-1]
             ww=self.cur.execute(f"select mat_name from materiel_management where mat_index={i[1]} ").fetchone()[0]
