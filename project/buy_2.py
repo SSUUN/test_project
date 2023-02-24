@@ -212,11 +212,12 @@ class f:  # 사용자 물건 구매 클래스
     def buy_log_last(self):
             i=self.cur.execute("select * from buy order by buy_date").fetchall()[-1]
             ww=self.cur.execute(f"select mat_name from materiel_management where mat_index={i[1]} ").fetchone()[0]
+            id1 = self.cur.execute(f"select cus_id from customer where cus_num = {i[2]} ").fetchone()[0]
             print(f"영수증 번호 : {i[0]} ")
-            print(f"사용자 번호 : {i[2]} ")
+            print(f"사용자 ID   : {id1} ")
             print(f"사용자 등급 : {i[3]} ")
             print(f"물품 명     : {ww} ")
-            
+            print(f"구매 개수   : {i[5]} ")
             print(f"구매 지점   : {i[4]} ")
             print(f"구매 총액   : {i[6]} ")
             print(f"구매 시간   : {i[-1]} ")

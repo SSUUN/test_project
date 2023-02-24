@@ -223,10 +223,12 @@ class Customer:
                                                         where cus_id='{self.id}')""").fetchall():   # cus_id는 로그인함수에서 저장한 self.id를 가져옴
             #i=self.cur.execute("select * from buy order by buy_date").fetchall()[-1]
             ww=cur.execute(f"select mat_name from materiel_management where mat_index={i[1]} ").fetchone()[0]   #물품명은 buy테이블에 없어서 m-m테이블에서 가져옴
+            id1 = cur.execute(f"select cus_id from customer where cus_num = {i[2]} ").fetchone()[0] # 영수증 사용자 id를 customer 테이블에서 cus_id를 찾아서 가져옴
             print(f"영수증 번호 : {i[0]} ")
-            print(f"사용자 번호 : {i[2]} ")
+            print(f"사용자 ID   : {id1} ")
             print(f"사용자 등급 : {i[3]} ")
             print(f"물품 명     : {ww} ")
+            print(f"구매 개수   : {i[5]} ")
             print(f"구매 지점   : {i[4]} ")
             print(f"구매 총액   : {i[6]} ")
             print(f"구매 시간   : {i[-1]} \n")
