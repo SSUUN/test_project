@@ -278,7 +278,7 @@ class f:  # 사용자 물건 구매 클래스
                             {self.user_date[0]},
                             '{self.user_date[1]}',
                             {pid},
-                            {item_num},
+                            {count},
                             {price1} ,
                             {1 if dis else 0 },
                             {discount*dis},
