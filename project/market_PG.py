@@ -62,7 +62,7 @@ while True:
                 
                 # 로그인 해야지만 가능 로그인 후 하위 메뉴 활성화
                 while True:
-                    customer_display = '''
+                    customer_display = '''                   
 ┌─────────────────────────────────┐
 │ 마켓 물류관리 프로그램 v1.01    │
 │ ■ 회원전용 메뉴                 │
