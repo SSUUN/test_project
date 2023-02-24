@@ -128,6 +128,11 @@ class Customer(f):
 
         cur.execute(f"select * from customer where cus_id ='{cus_id}'") # customer테이블에서 cus_id와 일치하는 행을 가져옴
         item = cur.fetchone()
+        
+        if not item:
+            print("사용자 정보가 없습니다.")
+            return
+        
         print(f'''
 회원 번호   : {item[0]}
 회원 아이디 : {item[1]}
