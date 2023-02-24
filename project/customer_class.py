@@ -121,14 +121,14 @@ class Customer:
         cur.execute(f"select * from customer where cus_id ='{cus_id}'") # customer테이블에서 cus_id와 일치하는 행을 가져옴
         item = cur.fetchone()
         print(f'''
-회원 번호 : {item[0]}
+회원 번호   : {item[0]}
 회원 아이디 : {item[1]}
-회원 이름 : {item[3]}
-회원 주소 : {item[4]}
+회원 이름   : {item[3]}
+회원 주소   : {item[4]}
 회원 이메일 : {item[5]}
 회원 적립금 : {item[6]}
 총 구매금액 : {item[7]}
-회원 등급 : {item[8]}
+회원 등급   : {item[8]}
         ''')
 
         conn.close()
@@ -149,8 +149,8 @@ class Customer:
         item = cur.fetchone()
         print(f'''
 회원 아이디 : {item[1]}
-회원 이름 : {item[3]}
-회원 주소 : {item[4]}
+회원 이름   : {item[3]}
+회원 주소   : {item[4]}
 회원 이메일 : {item[5]}
         ''')                                                           # 간단한 회원정보를 출력해주고 수정할 내용을 입력받음
         key = input('''                                                 

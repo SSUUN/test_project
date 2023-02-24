@@ -199,7 +199,7 @@ class f:  # 사용자 물건 구매 클래스
                                             2]  # 남아있는적립금보다 많이 입력하면 전체다 사용
 
                                 # 구매 하면 물품 개수 차감,적립금 사용자 전체사용금액, 영수증? 테이블 업데이트
-                            self.buy_update(name, d_num, d_price, tt1, d_dis,
+                            self.buy_update(name, d_price, tt1, d_dis,
                                                 d_discount, d_index, count)
                             self.buy_log_last()
                                 # print("구매 완료")# 구매성공
@@ -222,7 +222,7 @@ class f:  # 사용자 물건 구매 클래스
             print(f"구매 시간   : {i[-1]} ")
                 
     # 구매하면 DB데이블 업데이트 해주는 함수
-    def buy_update(self, item_name, item_num, item_price, user_save, dis,
+    def buy_update(self, item_name, item_price, user_save, dis,
                    discount, index, count):  # 상품 구매시 데이터 베이스 업데이트
 
         # 일단 지점 아이디 처음값가져옴 (위치를 모르니까 아무값이나 )
