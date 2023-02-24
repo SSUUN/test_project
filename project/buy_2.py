@@ -19,7 +19,7 @@ class f:  # 사용자 물건 구매 클래스
         if (self.cus_id, self.cus_pw) in d:             # 가져온 사용자 정보와 입력값이 일치하는지 비교
             print("로그인 성공")
             self.login_value = True
-            self.user_date = self.cur.execute(
+            self.user_data = self.cur.execute(
                 f"""select cus_num,cus_grade,cus_save  
                                             from customer
                                             where cus_id='{self.cus_id}'
@@ -175,13 +175,13 @@ class f:  # 사용자 물건 구매 클래스
                         if count > rc:
                             print(f"물품 수량부족 남은 수량 {rc}개")  # 남은거보다 사는게 많으면 판매불가
                         else:  # 사는게 더 적으면 가능
-                            if self.user_date[2] > 0:  # 적립금이 있으면
+                            if self.user_data[2] > 0:  # 적립금이 있으면
                                 
                                 tt = input("적립금을 사용하시겠습니까? (y/n)")  # 물어보고
                                 if tt == "y":
                                     while True:
                                         tt1 = input(
-                                                f"현재 적립금{self.user_date[2]}원 사용금액 입력 취소(q): "
+                                                f"현재 적립금{self.user_data[2]}원 사용금액 입력 취소(q): "
                                             )  # 얼마 남아있는지 알려주고 사용금액 입력
                                         if tt1.isdecimal():
                                             tt1=int(tt1)
@@ -191,11 +191,11 @@ class f:  # 사용자 물건 구매 클래스
                                             print("숫자를 입력하세요")
                                             continue
 
-                                    if tt1 <= self.user_date[
+                                    if tt1 <= self.user_data[
                                             2]:  # 남아있는적립금보다 작게쓰면 가능
                                         pass
                                     else:
-                                        tt1 = self.user_date[
+                                        tt1 = self.user_data[
                                             2]  # 남아있는적립금보다 많이 입력하면 전체다 사용
 
                                 # 구매 하면 물품 개수 차감,적립금 사용자 전체사용금액, 영수증? 테이블 업데이트
@@ -276,8 +276,8 @@ class f:  # 사용자 물건 구매 클래스
 "mat_num","mat_price","mat_dis","mat_discount","cus_savebool","buy_date")
                             values(
                             '{index}',
-                            {self.user_date[0]},
-                            '{self.user_date[1]}',
+                            {self.user_data[0]},
+                            '{self.user_data[1]}',
                             {pid},
                             {count},
                             {price1} ,
@@ -289,7 +289,7 @@ class f:  # 사용자 물건 구매 클래스
         print(f"{item_name} {count}개 {price1}원 결제완료({int(price1*0.01)}원 적립)\n")
         self.con.commit()
         # 업데이트 된 사용자 정보 업데이트 
-        self.user_date = self.cur.execute(
+        self.user_data = self.cur.execute(
                 f"""select cus_num,cus_grade,cus_save  
                                             from customer
                                             where cus_id='{self.cus_id}'
