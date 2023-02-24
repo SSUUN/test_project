@@ -1,12 +1,12 @@
 import sqlite3, os, re
 path = os.path.dirname(__file__)
-
+from buy_2 import f
 # 23_02_22_v01 수정본
 # customer = [('번호','아이디','비번','이름','주소','이메일','적립금','총구매금액','회원등급')]
  
 login_check = False
 
-class Customer:
+class Customer(f):
 
     # 회원가입 함수
     # 입력값 : 아이디, 비밀번호, 이름, 주소, 이메일
@@ -89,6 +89,14 @@ class Customer:
                         login_check = True              # 아이디/비밀번호가 DB값과 일치하면 전역변수 login_check를 True로 바꾼다
                         self.id = i[1]                  # self.id 인스턴스 변수를 입력한 아이디값으로 저장
                         print("로그인 성공!")
+                        self.user_data = cur.execute(
+                        f"""select cus_num,cus_grade,cus_save  
+                                                    from customer
+                                                    where cus_id='{cus_id}'
+                                                    and cus_pw='{cus_pw}'"""
+                        ).fetchone()                                # 로그인동시에 유저 데이터 가져옴
+                        self.cus_id=cus_id
+                        self.cus_pw=cus_pw
                         break
                     print('비밀번호가 일치하지 않습니다.')
             if cus_id in ('Q','q'):                     # 'Q','q'로 아이디 입력을 벗어남
@@ -217,16 +225,10 @@ class Customer:
     def buy_log_print(self):
         conn = sqlite3.connect(path+'/mart.db')
         cur = conn.cursor()
-        check = cur.execute(f"""select * from buy 
+        u=cur.execute(f"""select * from buy 
                                     where cus_num=(select cus_num from customer
                                                         where cus_id='{self.id}')""").fetchall()
-        if check == [] :
-            print("구매한 목록이 없습니다.")
-            return
-        
-        for i in cur.execute(f"""select * from buy 
-                                    where cus_num=(select cus_num from customer
-                                                        where cus_id='{self.id}')""").fetchall():   # cus_id는 로그인함수에서 저장한 self.id를 가져옴
+        for i in u :   # cus_id는 로그인함수에서 저장한 self.id를 가져옴
             #i=self.cur.execute("select * from buy order by buy_date").fetchall()[-1]
             ww=cur.execute(f"select mat_name from materiel_management where mat_index={i[1]} ").fetchone()[0]   #물품명은 buy테이블에 없어서 m-m테이블에서 가져옴
             id1 = cur.execute(f"select cus_id from customer where cus_num = {i[2]} ").fetchone()[0] # 영수증 사용자 id를 customer 테이블에서 cus_id를 찾아서 가져옴
@@ -238,7 +240,51 @@ class Customer:
             print(f"구매 지점   : {i[4]} ")
             print(f"구매 총액   : {i[6]} ")
             print(f"구매 시간   : {i[-1]} \n")
+            
+        self.back_buy(u)
+    # 환불하는함수 
+    def back_buy(self,u):
+        #선택
+        a=input("환불할 영수증 번호를 선택하세요. 종료 (q)")
+        if not a.isdecimal():
+            print("숫자를 입력하세요 ")
+            return
+        a=int(a)
 
+        # 내역에 있는값잉ㄴ지 확인 
+        ck=1
+        for i in u:
+            if i[0] == a:
+                index=i[1]
+                price1=i[6]
+                count=i[5]
+                dis=i[7]
+                discount=i[8]
+                u_s=i[10]
+                ck=0
+                break
+            
+        # 없거나 이미 화불한내역 
+        if ck==1:
+            print("없는번호")
+        elif price1<0:
+            print("환불내역입니다.")
+   
+        else:
+            for j in u:
+                if (i[1],i[2],j[4],-i[5],-i[6],i[7])==(j[1],j[2],j[4],j[5],j[6],j[7]):
+                    print("이미 환불한 내역입니다")
+                    return
+
+            # 아니면 이제 값 가져아서 환불 함 
+            item_name,item_price=self.cur.execute(f"""select mat_name,mat_price from materiel_management
+                                        where mat_index='{index}'""").fetchone()
+
+            user_save=-((item_price * count - item_price * count * discount / 100) if dis  else item_price * count)-price1
+            count=-i[5]
+            price1=-i[6]
+            self.buy_update(item_name,item_price,user_save, dis,
+                               discount, index, count,price1)
 
     # 로그인 하지 않고 회원 정보 조회하는 함수
     # 입력값 : 회원아이디

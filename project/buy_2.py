@@ -224,7 +224,7 @@ class f:  # 사용자 물건 구매 클래스
                 
     # 구매하면 DB데이블 업데이트 해주는 함수
     def buy_update(self, item_name, item_price, user_save, dis,
-                   discount, index, count):  # 상품 구매시 데이터 베이스 업데이트
+                   discount, index, count,price1=0):  # 상품 구매시 데이터 베이스 업데이트
 
         # 일단 지점 아이디 처음값가져옴 (위치를 모르니까 아무값이나 )
         pid = self.cur.execute("select market_id from branch").fetchone()[0]
@@ -232,8 +232,8 @@ class f:  # 사용자 물건 구매 클래스
             pid = 1
         # 물품 개수와 할인율 적립금 등을 적용하여 전테금액 계산
         
-        price1 = (item_price * count - item_price * count * discount / 100
-                  if dis else item_price * count) - user_save
+        price1 = ((item_price * count - item_price * count * discount / 100
+                  if dis else item_price * count) - user_save) if price1==0 else price1
 
         # 구매한 물품 개수많큼 남은 개수 차감
         self.cur.execute(
