@@ -217,7 +217,13 @@ class Customer:
     def buy_log_print(self):
         conn = sqlite3.connect(path+'/mart.db')
         cur = conn.cursor()
-
+        check = cur.execute(f"""select * from buy 
+                                    where cus_num=(select cus_num from customer
+                                                        where cus_id='{self.id}')""").fetchall()
+        if check == [] :
+            print("구매한 목록이 없습니다.")
+            return
+        
         for i in cur.execute(f"""select * from buy 
                                     where cus_num=(select cus_num from customer
                                                         where cus_id='{self.id}')""").fetchall():   # cus_id는 로그인함수에서 저장한 self.id를 가져옴
