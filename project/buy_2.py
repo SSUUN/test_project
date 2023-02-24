@@ -1,6 +1,7 @@
 import sqlite3,os
 path = os.path.dirname(__file__)
 
+# 클래스 f 선언
 class f:  # 사용자 물건 구매 클래스
     def __init__(self):  # 초기값 DB정보
         self.con = sqlite3.connect(path+"/mart.db")
@@ -295,6 +296,7 @@ class f:  # 사용자 물건 구매 클래스
                                             and cus_pw='{self.cus_pw}'"""
             ).fetchone()  # 로그인동시에 유저 데이터 가져옴
 
+# 클래스 branch 선언
 # 관리자가 매출관리과 직원들 관리
 class branch:
     # 초기 데이터베이스값
